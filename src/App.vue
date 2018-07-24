@@ -41,7 +41,7 @@ a{
 /*间隔条*/
 .gap-line{
 	height: 0.2rem;
-	background-color: #f0f0f0;
+	background-color: #999;
 }
 /*弹性布局*/
 .flex-between{
@@ -59,8 +59,8 @@ a{
 /*我是有底线的*/
 .bottom-line{
 	padding: 0.4rem;
-	/*background-color: #f0f0f0;*/
-	color: #999;
+	background-color: #999;
+	color: #fff;
 }
 
 </style>
