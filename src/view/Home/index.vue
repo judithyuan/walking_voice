@@ -12,13 +12,13 @@
 			<div>热门收听</div>
 		</div>
 		<div class="flex-between hot">
-			<router-link to="" class="item">
+			<router-link to="/list" class="item">
 				<img src="../../../static/img/banner_3.jpg" />
 				<p class="ellipsis">
 					西双版纳
 				</p>
 			</router-link>
-			<router-link to="" class="item">
+			<router-link to="/list" class="item">
 				<img src="../../../static/img/banner_3.jpg" />
 				<p class="ellipsis">
 					西双版纳
@@ -90,7 +90,7 @@
 		
 		<!--单曲入口-->
 		<router-link to="/list" class="entrance">
-			<img src="../../../dist/static/img/light_disk.png" class="rotate"/>
+			<img src="../../../static/img/light_disk.png" class="rotate"/>
 		</router-link>
 	</div>
 </template>
@@ -201,7 +201,7 @@
 		/*right:calc(50% - 0.55rem);*/
 		/*bottom: 0%;*/
 		right: 0;
-		top: 50%;
+		top: 65%;
 		width: 1.4rem;
 		padding: 0.05rem;
 		background-color: #fff;

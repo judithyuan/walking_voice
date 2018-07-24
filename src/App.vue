@@ -19,7 +19,7 @@ export default {
   font-family: PingFangSC-Regular, 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /*text-align: center;*/
   color: #2c3e50;
 }
 div,text,p{
@@ -48,6 +48,10 @@ a{
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	flex-wrap: wrap;
+}
+.flex{
+	display: flex;
 	flex-wrap: wrap;
 }
 /*单行文字省略*/
