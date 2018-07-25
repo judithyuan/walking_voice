@@ -62,9 +62,10 @@ a{
 }
 /*我是有底线的*/
 .bottom-line{
+	text-align: center;
 	padding: 0.4rem;
-	background-color: #999;
-	color: #fff;
+	/*background-color: #999;*/
+	color: #999;
 }
 
 </style>

@@ -8,7 +8,7 @@
 			<div class="swiper-pagination" slot="pagination"></div>
 		</swiper>
 		<!--热门收听-->
-		<div class="title">
+		<div class="home-title">
 			<div>热门收听</div>
 		</div>
 		<div class="flex-between hot">
@@ -40,7 +40,7 @@
 		<div class="gap-line"></div>
 
 		<!--专辑列表-->
-		<div class="title">
+		<div class="home-title">
 			<div>专辑列表</div>
 		</div>
 		<div class="flex-between album">
@@ -89,7 +89,7 @@
 		</div>
 		
 		<!--单曲入口-->
-		<router-link to="/list" class="entrance">
+		<router-link to="/player" class="entrance">
 			<img src="../../../static/img/light_disk.png" class="rotate"/>
 		</router-link>
 	</div>
@@ -147,7 +147,7 @@
 		opacity: 0.8;
 	}
 	
-	.title {
+	.home-title {
 		padding: 0.453333rem 0.4rem;
 		text-align: left;
 		div {
