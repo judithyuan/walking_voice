@@ -13,7 +13,7 @@ export default new Router({
       component: HomeIndex
     },
     {
-    	path: '/player',
+    	path: '/player/:id',
     	component: Player
     },
     {

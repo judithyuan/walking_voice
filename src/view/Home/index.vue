@@ -13,25 +13,25 @@
 		</div>
 		<div class="flex-between hot">
 			<router-link to="/list" class="item">
-				<img src="../../../static/img/banner_3.jpg" />
+				<img src="../../../static/img/test4.jpg" />
 				<p class="ellipsis">
 					西双版纳
 				</p>
 			</router-link>
 			<router-link to="/list" class="item">
-				<img src="../../../static/img/banner_3.jpg" />
+				<img src="../../../static/img/test3.jpg" />
 				<p class="ellipsis">
 					西双版纳
 				</p>
 			</router-link>
 			<router-link to="" class="item">
-				<img src="../../../static/img/banner_3.jpg" />
+				<img src="../../../static/img/test1.jpg" />
 				<p class="ellipsis">
 					西双版纳
 				</p>
 			</router-link>
 			<router-link to="" class="item">
-				<img src="../../../static/img/banner_3.jpg" />
+				<img src="../../../static/img/test4.jpg" />
 				<p class="ellipsis">
 					西双版纳
 				</p>
@@ -45,41 +45,42 @@
 		</div>
 		<div class="flex-between album">
 			<router-link to="" class="item">
-				<img src="../../../static/img/banner_2.jpg" />
+				<img src="../../../static/img/test2.jpg" />
 				<p class="ellipsis">
 					南通
 				</p>
 			</router-link>
 			<router-link to="" class="item">
-				<img src="../../../static/img/banner_2.jpg" />
+				<img src="../../../static/img/test2.jpg" />
 				<p class="ellipsis">
 					南通
 				</p>
 			</router-link>
 			<router-link to="" class="item">
-				<img src="../../../static/img/banner_2.jpg" />
+				<img src="../../../static/img/test2.jpg" />
 				<p class="ellipsis">
 					南通
 				</p>
 			</router-link>
 			<router-link to="" class="item">
-				<img src="../../../static/img/banner_2.jpg" />
+				<img src="../../../static/img/test2.jpg" />
 				<p class="ellipsis">
 					南通
 				</p>
 			</router-link>
 			<router-link to="" class="item">
-				<img src="../../../static/img/banner_2.jpg" />
+				<img src="../../../static/img/test2.jpg" />
 				<p class="ellipsis">
 					南通
 				</p>
 			</router-link>
 			<router-link to="" class="item">
-				<img src="../../../static/img/banner_2.jpg" />
+				<img src="../../../static/img/test2.jpg" />
 				<p class="ellipsis">
 					南通
 				</p>
 			</router-link>
+
 
 		</div>
 		
@@ -108,9 +109,9 @@
 				banners: [{
 					src: require('../../../static/img/banner_1.jpg')
 				}, {
-					src: require('../../../static/img/banner_2.jpg')
+					src: require('../../../static/img/banner_5.jpg')
 				}, {
-					src: require('../../../static/img/banner_3.jpg')
+					src: require('../../../static/img/banner_4.jpg')
 				}],
 				swiperOption: {
 					loop: true,

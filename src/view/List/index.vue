@@ -3,7 +3,7 @@
 		<div class="top flex">
 			<div class="bg"></div>
 			<div class="mask"></div>
-			<img src="../../../static/img/banner_3.jpg" />
+			<img src="../../../static/img/test4.jpg" />
 			<div class="right">
 				<h4 class="flex-between"><span class="ellipsis">南通-张骞</span> <img src="../../../static/img/share.png"/></h4>
 				<p>简介的事发生发射点发射点发射点发射胜多负少发射点发射点发士大夫撒旦发生大哥萨格撒旦发射点发范德萨发撒法发士大夫打撒广东噶阿凡达是发噶多噶梵蒂冈点发射点</p>
@@ -21,23 +21,14 @@
 			这里是详情 这里是详情 这里是详情
 		</div>
 		<!--目录-->
-		<div  :hidden="active_tab == 1">
-			<router-link to="/player" class="item flex-between">
+		<div :hidden="active_tab == 1">
+			<router-link :to="'/player/'+item.id" class="item flex-between" v-for="(item,index) in audio_list" :key="index">
 				<div class="right">
-					<h4>南通-张骞：中国伟大的失败的英雄</h4>
-					<p>来自声行漫步</p>
+					<h4>{{item.name}}</h4>
+					<p>来自声行漫步{{audio_id}}</p>
 				</div>
-				<div class="left" style="background-image: url('../../../static/img/banner_1.jpg');">
-					<span></span>
-				</div>
-			</router-link>
-			<router-link to="/player" class="item flex-between">
-				<div class="right">
-					<h4>南通-张骞：中国伟大的失败的英雄</h4>
-					<p>来自声行漫步</p>
-				</div>
-				<div class="left" style="background-image: url('../../../static/img/banner_1.jpg');">
-					<span class="playing"></span>
+				<div class="left" style="background-image: url('../../../static/img/test1.jpg');">
+					<span :class="audio_id == item.id ?'playing': ''"></span>
 				</div>
 			</router-link>
 
@@ -47,14 +38,37 @@
 </template>
 
 <script>
+	import {mapState} from 'vuex'
 	export default {
 		data() {
 			return {
 				active_tab: 2,
+				audio_list: [{
+						name: '陈瑞',
+						src: 'http://ting666.yymp3.com:86/new27/chenrui8/2.mp3',
+						id: 1,
+						content: '这是一首简单的小情歌'
+					},
+					{
+						name: '求婚',
+						src: 'http://ting666.yymp3.com:86/new27/underlover/1.mp3',
+						id: 2,
+						content: '无论你爱不爱我'
+					},
+					{
+						name: '玫瑰花的葬礼',
+						src: 'http://ting666.yymp3.com:86/new11/vae2/10.mp3',
+						id: 2,
+						content: '<div>玫瑰花的葬礼</div><div>黄思海深爱美霞</div><div>离开你一百个星期</div><div>我回到了这里</div><div>寻找我们爱过的证据</div>'
+					}
+				],
 			}
 		},
-		methods:{
-			switchTab(param){
+		computed:{
+  			...mapState(['audio_id']),
+		},
+		methods: {
+			switchTab(param) {
 				this.active_tab = param;
 			}
 		}
@@ -107,7 +121,7 @@
 			-webkit-line-clamp: 3;
 		}
 		.bg {
-			background: url('../../../static/img/banner_3.jpg') no-repeat;
+			background: url('../../../static/img/test4.jpg') no-repeat;
 			background-size: cover;
 			background-position: center;
 			width: 100%;
@@ -176,16 +190,15 @@
 				width: 0.7rem;
 				height: 0.7rem;
 				margin-top: 0.22rem;
-				background-size: cover;				
+				background-size: cover;
 				background-repeat: no-repeat;
 				background-image: url(../../../static/img/play_icon.png);
 			}
-			.playing{
+			.playing {
 				margin-top: 0.3rem;
 				width: 0.4rem;
 				height: 0.4rem;
 				background-image: url(../../../static/img/wave.gif);
-
 			}
 		}
 		.right {
