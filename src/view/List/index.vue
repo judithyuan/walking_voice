@@ -1,12 +1,12 @@
 <template>
 	<div>
 		<div class="top flex">
-			<div class="bg"></div>
+			<div class="bg" :style="{backgroundImage:'url('+album_info.thumb+')' }"></div>
 			<div class="mask"></div>
-			<img src="../../../static/img/test4.jpg" />
+			<img :src="album_info.thumb" />
 			<div class="right">
-				<h4 class="flex-between"><span class="ellipsis">南通-张骞</span> <img src="../../../static/img/share.png"/></h4>
-				<p>简介的事发生发射点发射点发射点发射胜多负少发射点发射点发士大夫撒旦发生大哥萨格撒旦发射点发范德萨发撒法发士大夫打撒广东噶阿凡达是发噶多噶梵蒂冈点发射点</p>
+				<h4 class="flex-between"><span class="ellipsis">{{album_info.name}}</span> <img src="../../../static/img/share.png"/></h4>
+				<p>简介：{{album_info.title}}</p>
 			</div>
 		</div>
 		<div class="tabbar flex-between">
@@ -18,16 +18,17 @@
 		<!--详情-->
 
 		<div class="detail" :hidden="active_tab == 2">
+			<div class="detail-title">{{album_info.name}}</div>
 			这里是详情 这里是详情 这里是详情
 		</div>
 		<!--目录-->
 		<div :hidden="active_tab == 1">
-			<router-link :to="'/player/'+item.id" class="item flex-between" v-for="(item,index) in audio_list" :key="index">
+			<router-link :to="'/player/'+item.id" class="item flex-between" v-for="(item,index) in album_song_list" :key="index">
 				<div class="right">
 					<h4>{{item.name}}</h4>
-					<p>来自声行漫步{{audio_id}}</p>
+					<p>来自声行漫步</p>
 				</div>
-				<div class="left" style="background-image: url('../../../static/img/test1.jpg');">
+				<div class="left" :style="{backgroundImage: 'url('+'item.thumb'+')'}">
 					<span :class="audio_id == item.id ?'playing': ''"></span>
 				</div>
 			</router-link>
@@ -62,10 +63,20 @@
 						content: '<div>玫瑰花的葬礼</div><div>黄思海深爱美霞</div><div>离开你一百个星期</div><div>我回到了这里</div><div>寻找我们爱过的证据</div>'
 					}
 				],
+				album_info:{},
+				album_song_list:[]
 			}
 		},
 		computed:{
   			...mapState(['audio_id']),
+		},
+		mounted(){
+			this.server.getAlbumList({
+				id:this.$route.params.id
+			}).then(res=>{
+				this.album_info = res.msg.album_info;
+				this.album_song_list = res.msg.album_song;
+			})
 		},
 		methods: {
 			switchTab(param) {
@@ -83,6 +94,7 @@
 		justify-content: flex-start;
 		padding: 0.5rem 0;
 		position: relative;
+		z-index: 2;
 		>img {
 			width: 3rem;
 			height: 3rem;
@@ -121,7 +133,7 @@
 			-webkit-line-clamp: 3;
 		}
 		.bg {
-			background: url('../../../static/img/test4.jpg') no-repeat;
+			background-repeat: no-repeat;
 			background-size: cover;
 			background-position: center;
 			width: 100%;
@@ -173,6 +185,11 @@
 		padding: 0.6rem;
 		line-height: 1.5;
 		font-size: 0.373333rem;
+		.detail-title{
+			font-size: 0.453333rem;
+			padding-bottom: 0.4rem;
+			color: #000;
+		}
 	}
 	/*目录*/
 	

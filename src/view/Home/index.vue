@@ -3,7 +3,9 @@
 		<!--轮播-->
 		<swiper :options="swiperOption" ref="mySwiper" style="height:4rem">
 			<swiper-slide v-for="(banner,index) in banners" :key="index">
-				<img v-if="banner.src" :src="banner.src" style="width: 100%;height: 100%;">
+				<router-link :to="banner.link?banner.link:'/'" style="display: inline-block;width: 100%;height:100%;">
+					<img :src="banner.img" style="width: 100%;height: 100%;">
+				</router-link>
 			</swiper-slide>
 			<div class="swiper-pagination" slot="pagination"></div>
 		</swiper>
@@ -12,28 +14,10 @@
 			<div>热门收听</div>
 		</div>
 		<div class="flex-between hot">
-			<router-link to="/list" class="item">
-				<img src="../../../static/img/test4.jpg" />
+			<router-link v-for="(item,index) in hot_list" :to="'list/'+item.id" class="item" :key="item.id">
+				<img :src="item.thumb" />
 				<p class="ellipsis">
-					西双版纳
-				</p>
-			</router-link>
-			<router-link to="/list" class="item">
-				<img src="../../../static/img/test3.jpg" />
-				<p class="ellipsis">
-					西双版纳
-				</p>
-			</router-link>
-			<router-link to="" class="item">
-				<img src="../../../static/img/test1.jpg" />
-				<p class="ellipsis">
-					西双版纳
-				</p>
-			</router-link>
-			<router-link to="" class="item">
-				<img src="../../../static/img/test4.jpg" />
-				<p class="ellipsis">
-					西双版纳
+					{{item.name}}
 				</p>
 			</router-link>
 		</div>
@@ -44,61 +28,30 @@
 			<div>专辑列表</div>
 		</div>
 		<div class="flex-between album">
-			<router-link to="" class="item">
-				<img src="../../../static/img/test2.jpg" />
+			<router-link v-for="(item,index) in albums_list" :to="'/list/'+item.id" class="item" :key="index">
+				<img :src="item.thumb" />
 				<p class="ellipsis">
-					南通
+					{{item.name}}
 				</p>
 			</router-link>
-			<router-link to="" class="item">
-				<img src="../../../static/img/test2.jpg" />
-				<p class="ellipsis">
-					南通
-				</p>
-			</router-link>
-			<router-link to="" class="item">
-				<img src="../../../static/img/test2.jpg" />
-				<p class="ellipsis">
-					南通
-				</p>
-			</router-link>
-			<router-link to="" class="item">
-				<img src="../../../static/img/test2.jpg" />
-				<p class="ellipsis">
-					南通
-				</p>
-			</router-link>
-			<router-link to="" class="item">
-				<img src="../../../static/img/test2.jpg" />
-				<p class="ellipsis">
-					南通
-				</p>
-			</router-link>
-			<router-link to="" class="item">
-				<img src="../../../static/img/test2.jpg" />
-				<p class="ellipsis">
-					南通
-				</p>
-			</router-link>
-
 
 		</div>
-		
+
 		<!--我是有底线的-->
 		<div class="bottom-line">
 			<div>已经到底了~</div>
 		</div>
-		
+
 		<!--单曲入口-->
-		<router-link to="/player" class="entrance">
-			<img src="../../../static/img/light_disk.png" class="rotate"/>
+		<router-link :to="'/player/'+audio_id" class="entrance">
+			<img src="../../../static/img/light_disk.png" class="rotate" />
 		</router-link>
 	</div>
 </template>
 
 <script>
 	import { swiper, swiperSlide } from 'vue-awesome-swiper';
-
+	import { mapState } from 'vuex';
 	export default {
 		components: {
 			swiper,
@@ -113,8 +66,8 @@
 				}, {
 					src: require('../../../static/img/banner_4.jpg')
 				}],
-				swiperOption: {
-					loop: true,
+				swiperOption: { //轮播配置项
+					//					loop: true, //这个东西有bug
 					autoplay: {
 						delay: 3000,
 						stopOnLastSlide: false,
@@ -129,14 +82,28 @@
 						bulletActiveClass: 'my-bullet-active',
 					},
 
-				}
+				},
+				hot_list: [],
+				albums_list: []
 			}
 		},
-		created() {
-
+		computed: {
+			...mapState(['audio_id']),
+		},
+		mounted() {
+			this.server.getIndexData().then(res => {
+				this.banners = res.msg.swiper;
+				this.hot_list = res.msg.hot;
+				this.albums_list = res.msg.albums;
+			})
 		},
 		methods: {
-
+			actualBack(){
+				console.log('dianw ')
+			},
+			back(){
+				console.log('回退')
+			}
 		},
 
 	}
@@ -180,24 +147,25 @@
 		}
 	}
 	/*专辑*/
+	
 	.album {
 		font-weight: 600;
 		padding: 0 0.28rem;
-		.item{
+		.item {
 			margin-bottom: 0.48rem;
 			width: 3.01rem;
-			img{
+			img {
 				width: 100%;
 				height: 3.01rem;
 			}
-			p{
+			p {
 				margin-top: 0.24rem;
 			}
 		}
 	}
-	
 	/*单曲入口*/
-	.entrance{
+	
+	.entrance {
 		position: fixed;
 		/*right:calc(50% - 0.55rem);*/
 		/*bottom: 0%;*/
@@ -206,24 +174,25 @@
 		width: 1.4rem;
 		padding: 0.05rem;
 		background-color: #fff;
-		box-shadow: 0 0 5px rgba(0,0,0,0.1);
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 		border: 1px solid #eee;
 		border-radius: 100% 0 0 100%;
-		img{
+		img {
 			width: 1.1rem;
 			height: 1.1rem;
 			margin-top: 0.05rem;
 		}
 	}
-	.rotate{
+	
+	.rotate {
 		animation: rotate 3s linear infinite;
 	}
-	@keyframes rotate{
-		0%{
+	
+	@keyframes rotate {
+		0% {
 			transform: rotate(0deg);
 		}
-
-		100%{
+		100% {
 			transform: rotate(360deg);
 		}
 	}

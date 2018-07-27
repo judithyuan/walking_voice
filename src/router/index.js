@@ -13,11 +13,11 @@ export default new Router({
       component: HomeIndex
     },
     {
-    	path: '/player/:id',
+    	path: '/player/:id',//播放页
     	component: Player
     },
     {
-    	path: '/list',//列表页
+    	path: '/list/:id',//列表页
     	component: List
     }
   ]

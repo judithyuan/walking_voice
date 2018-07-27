@@ -56,7 +56,8 @@
 			<div class="item-box">
 				<div class="item flex-between" v-for="(item,index) in audio_list" @click="chooseAudio(index)">
 					<div :class="active_index == index?'active':''">{{item.name}}</div>
-					<img src="../../../static/img/wave.gif" v-if="active_index == index" />
+					<!--<img src="../../../static/img/wave.gif" v-if="active_index == index" />-->
+					<playing-animation  v-if="active_index == index" ></playing-animation>
 				</div>
 			</div>
 		</div>
@@ -64,12 +65,13 @@
 </template>
 
 <script>
-	import {mapState,mapMutations} from 'vuex';
+	import { mapState, mapMutations } from 'vuex';
+	import PlayingAnimation from '@/components/PlayingAnimation';
 	var myAudio;
 	export default {
 		name: 'HelloWorld',
 		components: {
-			//    Aplayer
+			PlayingAnimation,
 		},
 		created() {
 			console.log('created')
@@ -113,7 +115,7 @@
 			}
 		},
 		methods: {
-			...mapMutations(['saveCurrentIndex','saveAudioId']),
+			...mapMutations(['saveCurrentIndex', 'saveAudioId']),
 			getData() {
 				if(this.active_index < this.audio_list.length - 1) {
 					this.btn_state = 2;
@@ -128,19 +130,19 @@
 			hide() {
 				this.show_modal = 2;
 			},
-			chooseAudio(index){
+			chooseAudio(index) {
 				this.switchAudio(index);
 				this.show_modal = 2;
 			},
-			switchAudio(index,id) {
-				if(index || index ===0) {
+			switchAudio(index, id) {
+				if(index || index === 0) {
 					this.active_index = index;
 					this.saveCurrentIndex(index);
 				}
 				this.saveAudioId(this.audio_list[this.active_index].id);
 				this.playing_state = 0;
 				myAudio.autoplay = true;
-				if(myAudio.played.length > 0 && !index && index!== 0) { //音乐已播放部分并且没有切换index
+				if(myAudio.played.length > 0 && !index && index !== 0) { //音乐已播放部分并且没有切换index
 					myAudio.play();
 				} else { //切换音乐
 					myAudio.src = this.audio_list[this.active_index].src;
@@ -161,7 +163,7 @@
 					}
 				}
 
-				if(index+1 == this.audio_list.length) {
+				if(index + 1 == this.audio_list.length) {
 					this.btn_state = 2;
 				}
 				if(index < 1) {
@@ -170,7 +172,7 @@
 			},
 			//开始播放
 			startPlay() {
-				
+
 				this.switchAudio();
 			},
 			//暂停
@@ -219,7 +221,7 @@
 		background-color: #83bcab;
 		color: #f4f1ef;
 		padding: 0 0.28rem 0 1.2rem;
-		margin-bottom: 2rem;
+		margin-bottom: 1.4rem;
 		.left {
 			width: 2.8rem;
 			height: 2.906666rem;
@@ -309,11 +311,12 @@
 			/*拖动块高度*/
 			width: 0.5rem;
 			/*拖动块宽度*/
-			background: #7cd9bd;
+			/*background: #7cd9bd;*/
+			background: #f0f5ef;
 			/*拖动块背景*/
 			border-radius: 100%;
 			/*外观设置为圆形*/
-			/*border: solid 1px #ddd;*/
+			border: solid 1px #d3ebce;
 			/*设置边框*/
 			position: relative;
 			z-index: 2;
@@ -325,12 +328,11 @@
 		height: 0;
 		width: 100%;
 		bottom: 0;
-		background-color: #666;
+		background-color: #f5f9f8;
 		box-shadow: 0 -1px 0.2rem rgba(0, 0, 0, 0.1);
 		.album-title {
 			width: 100%;
 			height: 1.2rem;
-			/*border-bottom: 1px solid #eee;*/
 			padding: 0 0.6rem;
 			box-sizing: border-box;
 			position: absolute;
@@ -348,12 +350,15 @@
 			margin-top: 1.2rem;
 			max-height: 7.8rem;
 			overflow-y: scroll;
+			padding-left: 0.6rem;
 			.item {
+				position: relative;
+				padding-right: 0.6rem;
 				height: 1rem;
-				padding: 0 0.6rem;
-				color: #ccc;
+				color: #999;
+				border-bottom: 1px solid #eee;
 				.active {
-					color: #fff;
+					color: #1ac5a3;
 				}
 			}
 		}
@@ -386,4 +391,6 @@
 			height: 0;
 		}
 	}
+
+
 </style>
