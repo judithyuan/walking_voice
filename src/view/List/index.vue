@@ -39,7 +39,8 @@
 </template>
 
 <script>
-	import {mapState} from 'vuex'
+	import { mapState } from 'vuex';
+	import ajax from '@/utils/http';
 	export default {
 		data() {
 			return {
@@ -63,28 +64,45 @@
 						content: '<div>玫瑰花的葬礼</div><div>黄思海深爱美霞</div><div>离开你一百个星期</div><div>我回到了这里</div><div>寻找我们爱过的证据</div>'
 					}
 				],
-				album_info:{},
-				album_song_list:[]
+				album_info: {},
+				album_song_list: [],
+				config_data: null,
 			}
 		},
-		computed:{
-  			...mapState(['audio_id']),
+		computed: {
+			...mapState(['audio_id']),
 		},
-		mounted(){
-			console.log(this.audio_id,'audio_id','dfdsf')
+		mounted() {
 			this.server.getAlbumList({
-				id:this.$route.params.id
-			}).then(res=>{
+				id: this.$route.params.id
+			}).then(res => {
 				this.album_info = res.msg.album_info;
-				console.log(this.album_info)
 				this.album_song_list = res.msg.album_song;
 			})
+			if(!this.config_data) {
+				this.server.getConfigData().then(res => {
+					this.config_data = {
+						debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+						appId: res.msg.appid, // 必填，公众号的唯一标识
+						timestamp: res.msg.time, // 必填，生成签名的时间戳
+						nonceStr: res.msg.nonceStr, // 必填，生成签名的随机串
+						signature: res.msg.signature, // 必填，签名
+						jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'] // 必填，需要使用的JS接口列表
+					}
+				})
+			}
 		},
+
 		methods: {
 			switchTab(param) {
 				this.active_tab = param;
 			},
-			share(){}
+			share() {
+				wx.config({
+					...this.config_data
+				});
+			},
+
 		}
 	}
 </script>
@@ -188,7 +206,7 @@
 		padding: 0.6rem;
 		line-height: 1.5;
 		font-size: 0.373333rem;
-		.detail-title{
+		.detail-title {
 			font-size: 0.453333rem;
 			padding-bottom: 0.4rem;
 			color: #000;

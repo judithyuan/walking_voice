@@ -11,4 +11,7 @@ export default {
 	getAlbumListByAudioId: (data)=>{//通过音频id获取列表
 		return ajax.post('index.php/index/getListBySong',data);
 	},
+	getConfigData: (data)=>{
+		return ajax.getSystemData('index.php/index/share ',data);
+	}
 }

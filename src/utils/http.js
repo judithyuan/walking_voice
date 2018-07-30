@@ -21,16 +21,6 @@ class Ajax{
 	}
 	get(url,obj={}){
 		Store.commit('toggleLoading');
-//			return axios.get(url,{
-//				params: obj
-//			}).then(res => {
-//				Store.commit('toggleLoading');
-//				if(res.data && res.data.status == 1){
-//					return res.data;				
-//				}else{
-//					console.log('数据异常')
-//				}
-//			})
 		return new Promise((resolve, reject) => {
 			axios.get(url,{
 				params: obj
@@ -41,6 +31,15 @@ class Ajax{
 				}else{
 					console.log('数据异常')
 				}
+			})
+		})
+	}
+	getSystemData(url,obj={}){
+		return new Promise((resolve, reject) => {
+			axios.get(url,{
+				params: obj
+			}).then(res => {
+				resolve(res.data);				
 			})
 		})
 	}
