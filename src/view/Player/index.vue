@@ -2,7 +2,7 @@
 	<div>
 		<!--头图-->
 		<div>
-			<img src="../../../static/img/test3.jpg" class="top-banner" />
+			<img :src="audio_list[active_index].thumb" class="top-banner" />
 		</div>
 
 		<!--标题-->
@@ -11,7 +11,7 @@
 		</div>
 
 		<!--内容-->
-		<div class="content" v-html="audio_list[active_index].content"></div>
+		<div class="content" v-html="audio_list[active_index].info"></div>
 
 		<!--二维码部分-->
 		<div class="company flex-between">
@@ -57,7 +57,7 @@
 				<div class="item flex-between" v-for="(item,index) in audio_list" @click="chooseAudio(index)">
 					<div :class="active_index == index?'active':''">{{item.name}}</div>
 					<!--<img src="../../../static/img/wave.gif" v-if="active_index == index" />-->
-					<playing-animation  v-if="active_index == index" ></playing-animation>
+					<playing-animation v-if="active_index == index"></playing-animation>
 				</div>
 			</div>
 		</div>
@@ -69,18 +69,19 @@
 	import PlayingAnimation from '@/components/PlayingAnimation';
 	var myAudio;
 	export default {
-		name: 'HelloWorld',
 		components: {
 			PlayingAnimation,
 		},
-		created() {
-			console.log('created')
-			this.getData();
-			this.active_index = this.$store.state.current_index;
-		},
 		mounted() { //在该生命周期获取audio节点,否则会报错
 			myAudio = document.getElementById("myAudio");
-			this.switchAudio();
+
+			if(this.$route.params.id !== this.audio_id){//如果当前音频不是之前播放的音频则重新请求列表
+				this.getListData(this.$route.params.id);
+			}else{
+				this.audio_list = this.$store.state.album_list
+				this.switchAudio();
+			}
+			this.getBtnState();
 		},
 		data() {
 			return {
@@ -92,36 +93,61 @@
 				duration_scd: 100, //当前歌曲总的秒数
 				playing_state: 1, //1为暂停中,2为播放中,0为加载中
 				btn_state: 1, //0为已播放到第一首,2为播放到最后一首
-				audio_list: [{
-						name: '陈瑞',
-						src: 'http://ting666.yymp3.com:86/new27/chenrui8/2.mp3',
-						id: 1,
-						content: '这是一首简单的小情歌'
-					},
-					{
-						name: '求婚',
-						src: 'http://ting666.yymp3.com:86/new27/underlover/1.mp3',
-						id: 2,
-						content: '无论你爱不爱我'
-					},
-					{
-						name: '玫瑰花的葬礼',
-						src: 'http://ting666.yymp3.com:86/new11/vae2/10.mp3',
-						id: 3,
-						content: '<div>玫瑰花的葬礼</div><div>黄思海深爱美霞</div><div>离开你一百个星期</div><div>我回到了这里</div><div>寻找我们爱过的证据</div>'
-					}
-				],
+				audio_list: [{name: ''}]
+//				audio_list: [{
+//						name: '陈瑞',
+//						src: 'http://ting666.yymp3.com:86/new27/chenrui8/2.mp3',
+//						id: 1,
+//						content: '这是一首简单的小情歌'
+//					},
+//					{
+//						name: '求婚',
+//						src: 'http://ting666.yymp3.com:86/new27/underlover/1.mp3',
+//						id: 2,
+//						content: '无论你爱不爱我'
+//					},
+//					{
+//						name: '玫瑰花的葬礼',
+//						src: 'http://ting666.yymp3.com:86/new11/vae2/10.mp3',
+//						id: 3,
+//						content: '<div>玫瑰花的葬礼</div><div>黄思海深爱美霞</div><div>离开你一百个星期</div><div>我回到了这里</div><div>寻找我们爱过的证据</div>'
+//					}
+//				],
 
 			}
 		},
+		computed:{
+			...mapState(['audio_id'])
+		},
 		methods: {
-			...mapMutations(['saveCurrentIndex', 'saveAudioId']),
-			getData() {
-				if(this.active_index < this.audio_list.length - 1) {
+			...mapMutations(['saveCurrentIndex', 'saveAudioId','saveAlbumList']),
+			getBtnState() {
+				if(this.active_index < this.audio_list.length - 1) { //按钮状态
 					this.btn_state = 2;
 				}
 				if(this.active_index < 1) {
 					this.btn_state = 0;
+				}
+			},
+			getListData(id) {//通过音频id获取整个列表
+				
+				this.server.getAlbumListByAudioId({
+					song_id: Number(id)
+				}).then(res => {
+					this.audio_list = res.msg.list;
+					this.saveAlbumList(res.msg.list);
+					console.log(this.audio_list,'sdfdsfdsf');
+					this.getItemIndex(id);
+					this.switchAudio();
+				})
+			},
+			getItemIndex(id){ //获取当前id对应的索引值index
+				for(let i = 0;i<this.audio_list.length;i++){
+					if(id === this.audio_list[i].id){
+						this.active_index = i;
+						this.saveAudioId(id);
+						return i;
+					}
 				}
 			},
 			show() {
@@ -137,9 +163,11 @@
 			switchAudio(index, id) {
 				if(index || index === 0) {
 					this.active_index = index;
-					this.saveCurrentIndex(index);
+//					this.getItemIndex(id);
+//					this.saveCurrentIndex(index);
+					this.saveAudioId(this.audio_list[index].id);
+//					this.$router.push('/player/'+this.audio_list[index].id)
 				}
-				this.saveAudioId(this.audio_list[this.active_index].id);
 				this.playing_state = 0;
 				myAudio.autoplay = true;
 				if(myAudio.played.length > 0 && !index && index !== 0) { //音乐已播放部分并且没有切换index
@@ -162,7 +190,9 @@
 						this.current_scd = 0;
 					}
 				}
-
+				if(index || index === 0) {
+					index = this.active_index;
+				}
 				if(index + 1 == this.audio_list.length) {
 					this.btn_state = 2;
 				}
@@ -391,6 +421,4 @@
 			height: 0;
 		}
 	}
-
-
 </style>

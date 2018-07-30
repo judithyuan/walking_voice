@@ -43,7 +43,7 @@
 		</div>
 
 		<!--单曲入口-->
-		<router-link :to="'/player/'+audio_id" class="entrance">
+		<router-link :to="'/player/'+audio_id" class="entrance" v-if="audio_id">
 			<img src="../../../static/img/light_disk.png" class="rotate" />
 		</router-link>
 	</div>

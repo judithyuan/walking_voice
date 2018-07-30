@@ -6,6 +6,7 @@ export default new Vuex.Store({
 		current_index: 0,
 		audio_id: 0,
 		loading:false,
+		album_list: []
 	},
 	mutations:{
 		saveCurrentIndex(state,index){
@@ -18,6 +19,9 @@ export default new Vuex.Store({
 		},
 		toggleLoading(state){
 			state.loading = !state.loading;
+		},
+		saveAlbumList(state,album_list){
+			state.album_list = album_list;
 		}
 	}
 })

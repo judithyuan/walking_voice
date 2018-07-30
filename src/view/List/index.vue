@@ -5,7 +5,7 @@
 			<div class="mask"></div>
 			<img :src="album_info.thumb" />
 			<div class="right">
-				<h4 class="flex-between"><span class="ellipsis">{{album_info.name}}</span> <img src="../../../static/img/share.png"/></h4>
+				<h4 class="flex-between"><span class="ellipsis">{{album_info.name}}</span> <img @click="share" src="../../../static/img/share.png"/></h4>
 				<p>简介：{{album_info.title}}</p>
 			</div>
 		</div>
@@ -19,7 +19,7 @@
 
 		<div class="detail" :hidden="active_tab == 2">
 			<div class="detail-title">{{album_info.name}}</div>
-			这里是详情 这里是详情 这里是详情
+			{{album_info.info}}
 		</div>
 		<!--目录-->
 		<div :hidden="active_tab == 1">
@@ -28,7 +28,7 @@
 					<h4>{{item.name}}</h4>
 					<p>来自声行漫步</p>
 				</div>
-				<div class="left" :style="{backgroundImage: 'url('+'item.thumb'+')'}">
+				<div class="left" :style="{backgroundImage: 'url('+item.thumb+')'}">
 					<span :class="audio_id == item.id ?'playing': ''"></span>
 				</div>
 			</router-link>
@@ -71,17 +71,20 @@
   			...mapState(['audio_id']),
 		},
 		mounted(){
+			console.log(this.audio_id,'audio_id','dfdsf')
 			this.server.getAlbumList({
 				id:this.$route.params.id
 			}).then(res=>{
 				this.album_info = res.msg.album_info;
+				console.log(this.album_info)
 				this.album_song_list = res.msg.album_song;
 			})
 		},
 		methods: {
 			switchTab(param) {
 				this.active_tab = param;
-			}
+			},
+			share(){}
 		}
 	}
 </script>
