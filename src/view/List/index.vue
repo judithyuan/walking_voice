@@ -128,7 +128,8 @@
 		}
 		h4 {
 			font-size: 0.48rem;
-			margin-top: 0.2rem;
+			padding-top: 0.1rem;
+			line-height: 1.5;
 			color: #fff;
 			span {
 				width: 5rem;

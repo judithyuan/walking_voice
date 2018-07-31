@@ -12,11 +12,17 @@
 
 <script>
 	import Loading from '@/components/Loading';
-	import { mapState } from 'vuex';
+	import { mapState,mapMutations } from 'vuex';
 	export default {
 		name: 'App',
 		components:{
 			Loading
+		},
+		mounted(){
+			
+		},
+		methods:{
+			...mapMutations(['checkAttention'])
 		},
 		computed:{
 			...mapState(['loading'])

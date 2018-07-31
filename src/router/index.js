@@ -6,7 +6,7 @@ import List from '@/view/List/index';//列表页
 Vue.use(Router)
 
 export default new Router({
-  routes: [
+routes: [
     {
       path: '/',
       component: HomeIndex

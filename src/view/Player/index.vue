@@ -74,7 +74,6 @@
 		},
 		mounted() { //在该生命周期获取audio节点,否则会报错
 			myAudio = document.getElementById("myAudio");
-
 			if(this.$route.params.id !== this.audio_id){//如果当前音频不是之前播放的音频则重新请求列表
 				this.getListData(this.$route.params.id);
 			}else{
@@ -85,7 +84,6 @@
 		},
 		data() {
 			return {
-				msg: 'Welcome to Your Vue.js App',
 				obj: {},
 				show_modal: false, //列表弹窗
 				active_index: 0, //正在在播放音频index
@@ -94,26 +92,6 @@
 				playing_state: 1, //1为暂停中,2为播放中,0为加载中
 				btn_state: 1, //0为已播放到第一首,2为播放到最后一首
 				audio_list: [{name: ''}]
-//				audio_list: [{
-//						name: '陈瑞',
-//						src: 'http://ting666.yymp3.com:86/new27/chenrui8/2.mp3',
-//						id: 1,
-//						content: '这是一首简单的小情歌'
-//					},
-//					{
-//						name: '求婚',
-//						src: 'http://ting666.yymp3.com:86/new27/underlover/1.mp3',
-//						id: 2,
-//						content: '无论你爱不爱我'
-//					},
-//					{
-//						name: '玫瑰花的葬礼',
-//						src: 'http://ting666.yymp3.com:86/new11/vae2/10.mp3',
-//						id: 3,
-//						content: '<div>玫瑰花的葬礼</div><div>黄思海深爱美霞</div><div>离开你一百个星期</div><div>我回到了这里</div><div>寻找我们爱过的证据</div>'
-//					}
-//				],
-
 			}
 		},
 		computed:{
@@ -136,9 +114,8 @@
 				}).then(res => {
 					this.audio_list = res.msg.list;
 					this.saveAlbumList(res.msg.list);
-					console.log(this.audio_list,'sdfdsfdsf');
-					this.getItemIndex(id);
-					this.switchAudio();
+					var index = this.getItemIndex(id);
+					this.switchAudio(index);
 				})
 			},
 			getItemIndex(id){ //获取当前id对应的索引值index
@@ -187,6 +164,7 @@
 						this.playing_state = 2;
 					}
 					if(myAudio.ended) { //音频结束切换current_time
+						console.log('结束')
 						this.current_scd = 0;
 					}
 				}

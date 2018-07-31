@@ -1,5 +1,9 @@
 <template>
 	<div>
+		<div>
+		{{openid}}	
+		</div>
+		
 		<!--轮播-->
 		<swiper :options="swiperOption" ref="mySwiper" style="height:4rem">
 			<swiper-slide v-for="(banner,index) in banners" :key="index">
@@ -51,7 +55,7 @@
 
 <script>
 	import { swiper, swiperSlide } from 'vue-awesome-swiper';
-	import { mapState } from 'vuex';
+	import { mapState,mapMutations } from 'vuex';
 	export default {
 		components: {
 			swiper,
@@ -88,7 +92,7 @@
 			}
 		},
 		computed: {
-			...mapState(['audio_id']),
+			...mapState(['audio_id','openid']),
 		},
 		mounted() {
 			this.server.getIndexData().then(res => {
@@ -96,8 +100,10 @@
 				this.hot_list = res.msg.hot;
 				this.albums_list = res.msg.albums;
 			})
+			this.checkAttention();
 		},
 		methods: {
+			...mapMutations(['checkAttention']),
 			actualBack(){
 				console.log('dianw ')
 			},
