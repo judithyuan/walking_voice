@@ -12,19 +12,52 @@
 
 <script>
 	import Loading from '@/components/Loading';
-	import { mapState,mapMutations } from 'vuex';
+	import { mapState, mapMutations } from 'vuex';
 	export default {
 		name: 'App',
-		components:{
+		components: {
 			Loading
 		},
-		mounted(){
-			
+		created() { //这里做静默登录操作获取code
+			if(!localStorage.getItem('localStorage')){
+				this.LoginWechat();				
+			}
+
 		},
-		methods:{
-			...mapMutations(['checkAttention'])
+		methods: {
+			...mapMutations(['checkAttention','saveCode']),
+			LoginWechat() {
+				let obj = {
+					appid: 'wxa749e08e4328a34d',
+					redirect_uri: encodeURIComponent('http://sheng.51tui.vip/frontend/#/'),
+					response_type: 'code',
+					scope: 'snsapi_base',
+					state: '123#wechat_redirect'
+				}
+				let uri = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=';
+				window.location.href = uri + obj.appid + '&redirect_uri=' + obj.redirect_uri + '&response_type=code&scope=snsapi_base&state=' + obj.state;
+				window.onload = ()=>{
+					this.getCode();
+				}
+//				this.getCode();
+			},
+			getCode() {
+				let path = window.location.href;
+//				let path = 'http://sheng.51tui.vip/frontend/?code=011y0Ymj27ZIaG0KXOoj2nSNmj2y0Ym1&state=123#/';
+				let params = path.split('?')[1];
+				let code = params.split('&')[0].split('=')[1];
+				if(code){
+					this.saveCode(code);
+					localStorage.setItem('code',code);					
+				}
+				
+			},
+			getOpenId() {
+
+			}
+
 		},
-		computed:{
+		computed: {
 			...mapState(['loading'])
 		}
 	}

@@ -18,6 +18,6 @@ routes: [
     {
     	path: '/list/:id',//列表页
     	component: List
-    }
+    },
   ]
 })
