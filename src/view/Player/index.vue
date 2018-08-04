@@ -17,7 +17,7 @@
 		<div class="company flex-between">
 			<img src="../../../static/img/walking_voice.png" class="left" />
 			<div class="right">
-				<img src="http://p.doguane.cn/03/qrcode_2.jpg" />
+				<img src="../../../static/img/qrcode.png" />
 			</div>
 		</div>
 

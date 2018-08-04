@@ -1,9 +1,5 @@
 <template>
 	<div>
-		<div>
-			{{code}}
-		</div>
-
 		<!--轮播-->
 		<swiper :options="swiperOption" ref="mySwiper" style="height:4rem">
 			<swiper-slide v-for="(banner,index) in banners" :key="index">
@@ -63,13 +59,7 @@
 		},
 		data() {
 			return {
-				banners: [{
-					src: require('../../../static/img/banner_1.jpg')
-				}, {
-					src: require('../../../static/img/banner_5.jpg')
-				}, {
-					src: require('../../../static/img/banner_4.jpg')
-				}],
+				banners: [],
 				swiperOption: { //轮播配置项
 					//					loop: true, //这个东西有bug
 					autoplay: {
@@ -103,7 +93,6 @@
 			})
 		},
 		methods: {
-			...mapMutations(['checkAttention']),
 			actualBack() {
 				console.log('dianw ')
 			},

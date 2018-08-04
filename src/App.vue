@@ -6,40 +6,46 @@
 			您的浏览器不支持 audio 元素。
 		</audio>
 		<router-view/>
+		<!--<mycode></mycode>-->
 		<loading v-if="loading"></loading>
 	</div>
 </template>
 
 <script>
+	import Mycode from '@/components/Mycode';
 	import Loading from '@/components/Loading';
 	import { mapState, mapMutations } from 'vuex';
+	import { setCookie, getCookie} from '@/utils/common';
 	export default {
 		name: 'App',
 		components: {
-			Loading
+			Loading,
+			Mycode
 		},
 		created() { //这里做静默登录操作获取code
-			if(!localStorage.getItem('localStorage')){
-				this.LoginWechat();				
+			
+			if(getCookie('uid') || getCookie('code')){
+				return;
 			}
-
+//			this.LoginWechat();				
 		},
 		methods: {
-			...mapMutations(['checkAttention','saveCode']),
-			LoginWechat() {
+			...mapMutations(['checkAttention','saveSubscribe']),
+			LoginWechat() { //微信登录
+				let domin = 'http://sheng.51tui.vip/';
 				let obj = {
 					appid: 'wxa749e08e4328a34d',
-					redirect_uri: encodeURIComponent('http://sheng.51tui.vip/frontend/#/'),
+					redirect_uri: encodeURIComponent(domin+'frontend/#/'),
 					response_type: 'code',
 					scope: 'snsapi_base',
 					state: '123#wechat_redirect'
 				}
-				let uri = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=';
-				window.location.href = uri + obj.appid + '&redirect_uri=' + obj.redirect_uri + '&response_type=code&scope=snsapi_base&state=' + obj.state;
+				let uri = 'https://open.weixin.qq.com/connect/oauth2/authorize?';
+				window.location.href = uri +'appid='+ obj.appid + '&redirect_uri=' + obj.redirect_uri + '&response_type=code&scope=snsapi_base&state=' + obj.state;
 				window.onload = ()=>{
 					this.getCode();
 				}
-//				this.getCode();
+				this.getCode();
 			},
 			getCode() {
 				let path = window.location.href;
@@ -47,14 +53,17 @@
 				let params = path.split('?')[1];
 				let code = params.split('&')[0].split('=')[1];
 				if(code){
-					this.saveCode(code);
-					localStorage.setItem('code',code);					
+					setCookie({code:code,min:4});
+					this.server.getOpenId({code:code}).then(res=>{
+						console.log(res);
+						setCookie({uid:res.msg.userInfo.uid});
+						if(res.msg.userInfo.subscribe){
+							this.saveSubscribe(res.msg.userInfo.subscribe);
+						}
+					})
 				}
 				
 			},
-			getOpenId() {
-
-			}
 
 		},
 		computed: {

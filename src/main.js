@@ -8,16 +8,19 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css';
 import server from '@/utils/server';
 
+
 Vue.prototype.server = server;
 
 Vue.use(VueAwesomeSwiper);
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  store,
-  components: { App },
-  template: '<App/>'
+	el: '#app',
+	router,
+	store,
+	components: {
+		App
+	},
+	template: '<App/>'
 })

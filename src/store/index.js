@@ -8,7 +8,7 @@ export default new Vuex.Store({
 		audio_id: 0,
 		loading: false,
 		album_list: [],
-		code: ''
+		subscribe: ''
 	},
 	mutations: {
 		saveCurrentIndex(state, index) {
@@ -25,8 +25,8 @@ export default new Vuex.Store({
 		saveAlbumList(state, album_list) {
 			state.album_list = album_list;
 		},
-		saveCode(state,code){
-			state.code = code;
+		saveSubscribe(state,subscribe){
+			state.subscribe = subscribe;
 		}
 	}
 })
