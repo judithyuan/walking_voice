@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<!--<img src="/static/img/banner_1.jpg" style="width: 100%;"/>-->
 		<!--轮播-->
 		<swiper :options="swiperOption" ref="mySwiper" style="height:4rem">
 			<swiper-slide v-for="(banner,index) in banners" :key="index">

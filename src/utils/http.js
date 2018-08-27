@@ -2,7 +2,7 @@ import axios from 'axios';
 import Store from '@/store/index';
 import qs from 'qs';
 
-axios.defaults.baseURL = 'http://sheng.51tui.vip/';
+axios.defaults.baseURL = 'http://api.bkvo666.cn/';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 class Ajax {
 	post(url, obj = {}) {
