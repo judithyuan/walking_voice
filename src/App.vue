@@ -1,6 +1,6 @@
 <template>
 	<div id="app">
-		<audio id="myAudio">
+		<audio id="myAudio" preload="auto">
 			<!--<source src="horse.ogg" type="audio/ogg">-->
 			<!--<source src="http://ting666.yymp3.com:86/new27/chenrui8/2.mp3" type="audio/mpeg">-->
 			您的浏览器不支持 audio 元素。

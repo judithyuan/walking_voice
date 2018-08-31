@@ -77,10 +77,13 @@
 			if(this.$route.params.id !== this.audio_id){//如果当前音频不是之前播放的音频则重新请求列表
 				this.getListData(this.$route.params.id);
 			}else{
-				this.audio_list = this.$store.state.album_list
+				this.audio_list = this.$store.state.album_list;
+				this.active_index = this.current_index;
 				this.switchAudio();
+				
 			}
 			this.getBtnState();
+			this.checkUserAgent();
 		},
 		data() {
 			return {
@@ -90,21 +93,39 @@
 				current_scd: 0, //当前播放秒数
 				duration_scd: 100, //当前歌曲总的秒数
 				playing_state: 1, //1为暂停中,2为播放中,0为加载中
-				btn_state: 1, //0为已播放到第一首,2为播放到最后一首
-				audio_list: [{name: ''}]
+				btn_state: 1, //0为已播放到第一首,2为播放到最后一首,1为中间的
+				audio_list: [{name: ''}],
+				is_iphone: '',
 			}
 		},
 		computed:{
-			...mapState(['audio_id'])
+			...mapState(['audio_id','album_list','current_index'])
 		},
 		methods: {
 			...mapMutations(['saveCurrentIndex', 'saveAudioId','saveAlbumList']),
-			getBtnState() {
-				if(this.active_index < this.audio_list.length - 1) { //按钮状态
-					this.btn_state = 2;
+			//判断手机机型
+			checkUserAgent(){
+				var ua = navigator.userAgent;
+				var ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
+				isIphone =!ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),
+				isAndroid = ua.match(/(Android)\s+([\d.]+)/),
+				isMobile = isIphone || isAndroid;
+				//判断
+				
+				if(isIphone){
+					this.is_iphone = true;
+				}else{
+					this.is_iphone = false
 				}
-				if(this.active_index < 1) {
+
+			},
+			getBtnState() {
+				if(this.active_index == this.audio_list.length - 1) { //按钮状态
+					this.btn_state = 2;
+				}else if(this.active_index < 1) {
 					this.btn_state = 0;
+				}else{
+					this.btn_state = 1;
 				}
 			},
 			getListData(id) {//通过音频id获取整个列表
@@ -141,22 +162,26 @@
 				if(index || index === 0) {
 					this.active_index = index;
 //					this.getItemIndex(id);
-//					this.saveCurrentIndex(index);
+					this.saveCurrentIndex(index);
 					this.saveAudioId(this.audio_list[index].id);
-//					this.$router.push('/player/'+this.audio_list[index].id)
+					this.$router.push('/player/'+this.audio_list[index].id)
 				}
-				this.playing_state = 0;
-				myAudio.autoplay = true;
+				
+				if(!this.is_iphone){
+					this.playing_state = 0;
+				}
+				
 				if(myAudio.played.length > 0 && !index && index !== 0) { //音乐已播放部分并且没有切换index
 					myAudio.play();
 				} else { //切换音乐
+					
+					this.duration_scd = 0;//进度条回到初始位置
 					myAudio.src = this.audio_list[this.active_index].src;
-					console.log(myAudio.src)
+					myAudio.play();
 				}
 
 				myAudio.ontimeupdate = () => {
 					this.duration_scd = myAudio.duration;
-					if(!this.duration_scd) {}
 					this.current_scd = myAudio.currentTime;
 					if(myAudio.paused) {
 						this.playing_state = 1;
@@ -168,19 +193,14 @@
 						this.current_scd = 0;
 					}
 				}
+				
 				if(index || index === 0) {
 					index = this.active_index;
 				}
-				if(index + 1 == this.audio_list.length) {
-					this.btn_state = 2;
-				}
-				if(index < 1) {
-					this.btn_state = 0;
-				}
+				this.getBtnState();
 			},
 			//开始播放
 			startPlay() {
-
 				this.switchAudio();
 			},
 			//暂停

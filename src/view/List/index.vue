@@ -26,13 +26,13 @@
 		</div>
 		<!--目录-->
 		<div :hidden="active_tab == 1">
-			<router-link :to="'/player/'+item.id" class="item flex-between" v-for="(item,index) in album_song_list" :key="index">
+			<router-link :to="'/player/'+item.id"  class="item flex-between" v-for="(item,index) in album_song_list" :key="index">
 				<div class="right">
 					<h4>{{item.name}}</h4>
 					<p>来自声行漫步</p>
 				</div>
-				<div class="left" :style="{backgroundImage: 'url('+item.thumb+')'}">
-					<span :class="audio_id == item.id ?'playing': ''"></span>
+				<div class="left" :style="{backgroundImage: 'url('+item.thumb+')'}" @click="audio_id == item.id ?(play_state == 1?pause(): play(item.id,item.src)):''">
+					<span :class="audio_id == item.id ?(play_state == 1?'playing':'paused'): ''"></span>
 				</div>
 			</router-link>
 
@@ -42,8 +42,9 @@
 </template>
 
 <script>
-	import { mapState } from 'vuex';
+	import { mapState,mapMutations } from 'vuex';
 	import ajax from '@/utils/http';
+	var myAudio;
 	export default {
 		data() {
 			return {
@@ -70,39 +71,74 @@
 				album_info: {},
 				album_song_list: [],
 				config_data: null,
+				play_state:0,
 			}
 		},
 		computed: {
-			...mapState(['audio_id']),
+			...mapState(['audio_id','current_index']),
 		},
-		mounted() {
+		mounted() {	
+			myAudio = document.getElementById("myAudio");
+			this.play_state = myAudio.played.length;
+			console.log(this.play_state,'this.play_state');
 			this.server.getAlbumList({
 				id: this.$route.params.id
 			}).then(res => {
+
 				this.album_info = res.msg.album_info;
 				this.album_song_list = res.msg.album_song;
 			})
-			if(!this.config_data) {
-				this.server.getConfigData({
-					url: window.location.href
-				}).then(res => {
-					this.config_data = {
-//						debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-						appId: res.msg.appid, // 必填，公众号的唯一标识
-						timestamp: res.msg.time, // 必填，生成签名的时间戳
-						nonceStr: res.msg.nonceStr, // 必填，生成签名的随机串
-						signature: res.msg.signature, // 必填，签名
-						jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'] // 必填，需要使用的JS接口列表
-					}
-				})
-			}
 			
-			this.share();
+//			if(!this.config_data) {
+//				this.server.getConfigData({
+//					url: window.location.href
+//				}).then(res => {
+//					this.config_data = {
+////						debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+//						appId: res.msg.appid, // 必填，公众号的唯一标识
+//						timestamp: res.msg.time, // 必填，生成签名的时间戳
+//						nonceStr: res.msg.nonceStr, // 必填，生成签名的随机串
+//						signature: res.msg.signature, // 必填，签名
+//						jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'] // 必填，需要使用的JS接口列表
+//					}
+//				})
+//			}
+			
+//			this.share();
 		},
 
 		methods: {
+			...mapMutations(['saveCurrentIndex', 'saveAudioId','saveAlbumList']),
+			getItemIndex(id){ //获取当前id对应的索引值index
+				for(let i = 0;i<this.album_song_list.length;i++){
+					if(id === this.album_song_list[i].id){
+						this.active_index = i;
+						console.log(i,'i')
+						return i;
+					}
+				}
+			},
 			switchTab(param) {
 				this.active_tab = param;
+			},
+			play(id,src){
+				let index = this.getItemIndex(id);
+				if(myAudio.played.length > 0 && index===this.current_index) { //音乐已播放部分并且没有切换index
+					myAudio.play();
+				} else { //切换音乐
+					this.saveAlbumList(this.album_song_list);
+					this.saveAudioId(id);
+					this.saveCurrentIndex(index);
+					myAudio.src = src;
+					myAudio.play();
+				}
+				this.play_state = 1;
+				return false;
+			},
+			pause(){
+				myAudio.pause();
+				this.play_state = 0;
+				return false;
 			},
 			share() {
 				wx.config({
@@ -265,13 +301,24 @@
 				margin-top: 0.22rem;
 				background-size: cover;
 				background-repeat: no-repeat;
-				background-image: url(../../../static/img/play_icon.png);
+				/*background-image: url(../../../static/img/list_play.png);*/
 			}
 			.playing {
-				margin-top: 0.3rem;
+				/*width: 0.6rem;
+				height: 0.6rem;*/
+				/*background-image: url(../../../static/img/list_pause.png);*/
+				
+				margin-top: 0.4rem;
 				width: 0.4rem;
 				height: 0.4rem;
-				background-image: url(../../../static/img/wave.gif);
+				background-image: url(../../../dist/static/img/wave.gif);
+			}
+			.paused{
+				width: 0.7rem;
+				height: 0.7rem;
+				margin-top: 0.22rem;
+				background-image: url(../../../static/img/list_play.png);
+				
 			}
 		}
 		.right {
