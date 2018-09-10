@@ -164,7 +164,6 @@
 //					this.getItemIndex(id);
 					this.saveCurrentIndex(index);
 					this.saveAudioId(this.audio_list[index].id);
-					this.$router.push('/player/'+this.audio_list[index].id)
 				}
 				
 				if(!this.is_iphone){

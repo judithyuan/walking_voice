@@ -15,7 +15,10 @@ class Ajax {
 				} else {
 					console.log('数据异常')
 				}
-			})
+			}).catch(function (error) {
+				Store.commit('toggleLoading');
+			    console.log(error);
+		  	});
 
 		})
 	}
@@ -32,7 +35,10 @@ class Ajax {
 					console.log('数据异常')
 				}
 			})
-		})
+		}).catch(function (error) {
+			Store.commit('toggleLoading');
+		    console.log(error);
+	  	});
 	}
 	getSystemData(url, obj = {}) {
 		return new Promise((resolve, reject) => {

@@ -31,7 +31,10 @@
 					<h4>{{item.name}}</h4>
 					<p>来自声行漫步</p>
 				</div>
-				<div class="left" :style="{backgroundImage: 'url('+item.thumb+')'}" @click="audio_id == item.id ?(play_state == 1?pause(): play(item.id,item.src)):''">
+				<div class="left" :style="{backgroundImage: 'url('+item.thumb+')'}" v-if="audio_id == item.id" @click.prevent="play_state == 1?pause(): play(item.id,item.src)">
+					<span :class="audio_id == item.id ?(play_state == 1?'playing':'paused'): ''"></span>
+				</div>
+				<div class="left" :style="{backgroundImage: 'url('+item.thumb+')'}" v-else>
 					<span :class="audio_id == item.id ?(play_state == 1?'playing':'paused'): ''"></span>
 				</div>
 			</router-link>
@@ -80,7 +83,6 @@
 		mounted() {	
 			myAudio = document.getElementById("myAudio");
 			this.play_state = myAudio.played.length;
-			console.log(this.play_state,'this.play_state');
 			this.server.getAlbumList({
 				id: this.$route.params.id
 			}).then(res => {
@@ -113,7 +115,6 @@
 				for(let i = 0;i<this.album_song_list.length;i++){
 					if(id === this.album_song_list[i].id){
 						this.active_index = i;
-						console.log(i,'i')
 						return i;
 					}
 				}
@@ -133,12 +134,10 @@
 					myAudio.play();
 				}
 				this.play_state = 1;
-				return false;
 			},
 			pause(){
 				myAudio.pause();
 				this.play_state = 0;
-				return false;
 			},
 			share() {
 				wx.config({
@@ -287,7 +286,7 @@
 	
 	.item {
 		padding: 0.2rem 0.6rem 0 0.6rem;
-		margin-top: 0.4rem;
+		padding-top: 0.6rem;
 		.left {
 			width: 1.2rem;
 			height: 1.2rem;
@@ -311,7 +310,7 @@
 				margin-top: 0.4rem;
 				width: 0.4rem;
 				height: 0.4rem;
-				background-image: url(../../../dist/static/img/wave.gif);
+				background-image: url(../../../static/img/wave.gif);
 			}
 			.paused{
 				width: 0.7rem;
